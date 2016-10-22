@@ -44,17 +44,20 @@
 
 <body>
     <div class="app">
-        <div class="app-back-main">
-            <button type="button">Back</button>
+        <div class="app-task-back">
+            <button type="button" task-step="who">Back</button>
         </div>
         <div class="app-task-next">
-            <button type="button">Next</button>
+            <button type="button" task-step="who">Next</button>
         </div>
-        <h1 class="app-title">Enter an activity</h1>
+        <h1 class="app-title">Invite people</h1>
         <div class="app-content">
+            <form class="app-form">
+                <input type="text" placeholder="Activity" id="app-task-input" task-step="who">
+            </form>
         </div>
         <div class="app-task-breadcrumbs">
-        What - who- when - where
+            <a task-step="what" href="/whatTask.html">What</a> + <a task-step="who" href="/whoTask.html">Who</a> + <a task-step="when" href="/whenTask.html">When</a> + <a task-step="where" href="/whereTask.html">Where</a>
         </div>
     </div>
     <script type="text/javascript" src="js/jquery.min.js"></script>

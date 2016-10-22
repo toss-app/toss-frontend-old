@@ -44,10 +44,16 @@
 
 <body>
     <div class="app">
-        <h1 class="app-title">It's working!</h1>
+        <div class="app-task-back">
+            <button type="button" task-step="where">Back</button>
+        </div>
+        <div class="app-task-next">
+            <button type="button" task-step="where">Next</button>
+        </div>
+        <h1 class="app-title">Where?</h1>
         <div class="app-content">
-            <div class="app-task-create">
-                <a href="/whatTask.html">create task</a>
+            <div class="app-task-breadcrumbs">
+                <a task-step="what" href="/whatTask.html">What</a> + <a task-step="who" href="/whoTask.html">Who</a> + <a task-step="when" href="/whenTask.html">When</a> + <a task-step="where" href="/whereTask.html">Where</a>
             </div>
         </div>
     </div>

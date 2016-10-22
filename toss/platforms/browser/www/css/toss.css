@@ -51,3 +51,15 @@ input {
 .app-back {
     margin-top: 10px;
 }
+
+.app-task-back, .app-task-next {
+    display: inline-block;
+}
+
+.app-task-next {
+    float: right;
+}
+
+.app-task-breadcrumbs {
+    text-align: center;
+}
