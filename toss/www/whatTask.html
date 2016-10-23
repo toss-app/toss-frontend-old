@@ -44,20 +44,20 @@
 
 <body>
     <div class="app">
-        <div class="app-task-back">
-            <button type="button" task-step="what">Back</button>
-        </div>
-        <div class="app-task-next">
-            <button type="button" task-step="what">Next</button>
-        </div>
-        <h1 class="app-title">What activity</h1>
-        <div class="app-content">
-            <form class="app-form">
-                <input type="text" placeholder="Activity" id="app-task-input" task-step="what">
-            </form>
-        </div>
-        <div class="app-task-breadcrumbs">
-            <a task-step="what" href="/whatTask.html">What</a> + <a task-step="who" href="/whoTask.html">Who</a> + <a task-step="when" href="/whenTask.html">When</a> + <a task-step="where" href="/whereTask.html">Where</a>
+        <div class="app-container">
+            <div class="app-navbar">
+                <div class="app-task-back">
+                    <button type="button" task-step="what">Back</button>
+                </div>
+                <div class="app-task-next">
+                    <button type="button" task-step="what">Next</button>
+                </div>
+            </div>
+            <div class="app-content">
+                <form class="app-form">
+                    <input type="text" placeholder="What's the activity?" id="app-task-input" task-step="what">
+                </form>
+            </div>
         </div>
     </div>
     <script type="text/javascript" src="js/jquery.min.js"></script>
