@@ -44,14 +44,24 @@
 
 <body>
     <div class="app">
-        <h1 class="app-title">It's working!</h1>
-        <div class="app-content">
-            <div class="app-task-create">
-                <a href="/whatTask.html">create task</a>
+        <div class="app-container">
+            <div class="app-content">
+                <div class="app-navbar">
+                    <div class="app-task-create">
+                        Add a new activity
+                        <a href="./whatTask.html">+</a>
+                    </div>
+                </div>
+                <div class="app-task-view">
+                    <h2>Pending</h2>
+
+                    <h2>Groups</h2>
+                </div>
             </div>
         </div>
     </div>
     <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type='application/javascript' src='js/fastclick.js'></script>
     <script type="text/javascript" src="js/toss.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
 </body>

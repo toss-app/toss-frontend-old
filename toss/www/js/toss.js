@@ -1,6 +1,10 @@
 var domain = "http://fac96201.ngrok.io";
 var url = domain + "/api/v1";
 
+$(function() {
+    FastClick.attach(document.body);
+});
+
 $(document).ready(function() {
 
 	if (!window.localStorage.getItem("TossApp-TaskState")) {
@@ -48,8 +52,12 @@ $(document).ready(function() {
 
 	if ($("#app-task-input")) {
 		var step = $("#app-task-input").attr("task-step");
-		if (localGet(step)) {
-			$("#app-task-input").val(localGet(step));
+		var stepData = localGet(step);
+		if (stepData) {
+			$("#app-task-input").val(stepData);
+			if (step == "when") {
+				$("#app-task-time").text(stepData + " minutes from now");
+			}
 		}
 		taskBreadcrumbs();
 		
@@ -64,6 +72,10 @@ $(document).ready(function() {
 				$("#app-task-time").text($("#app-task-input").val() + " minutes from now");
 			});
 		}
+		setTimeout(function() {
+			$(".app-content-loading").css("display", "none");
+			$(".app-content-hidden").css("display", "inline");
+		}, 300);
 	}
 
 	$(".app-task-back>button").click(function(e) {
@@ -124,10 +136,37 @@ $(document).ready(function() {
 		e.preventDefault();
 	});
 
-	if ($("#tossConfirmTaskButton")) {
+	if ($("#tossConfirmTaskButton").length) {
+		console.log(localGet("token"));
 		if (!taskValidate()) {
 			$("#tossConfirmTaskButton").prop("disabled", "true");
 		}
+		$("#tossConfirmTaskButton").click(function(e) {
+			var data = {
+				author: localGet("who"),
+				title: localGet("what"),
+				date: localGet("when"),
+				location: localGet("where")
+			};
+			
+			console.log(localGet("when"));
+			var token = localGet("token");
+
+			$.ajax({
+				url: url + "/activities/",
+				type: "POST",
+				headers: {
+					"Authorization": "Token " + token,
+				},
+				data: data,
+				dataType: "json"
+			}).done(function(resp, status, err) {
+				console.log(status);
+				console.log(resp, status, err);
+			});
+
+			e.preventDefault();
+		});
 	}
 
 	$("#tossLoginButton").click(function(e) {

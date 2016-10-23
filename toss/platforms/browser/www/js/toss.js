@@ -1,4 +1,9 @@
-var url = "http://c6f24a13.ngrok.io/api";
+var domain = "http://fac96201.ngrok.io";
+var url = domain + "/api/v1";
+
+$(function() {
+    FastClick.attach(document.body);
+});
 
 $(document).ready(function() {
 
@@ -34,28 +39,59 @@ $(document).ready(function() {
 		});
 	}
 
+	function taskValidate() {
+		var steps = ["what", "who", "when", "where"];
+		var count = 0;
+		steps.forEach(function(step) {
+			if (localGet(step)) {
+				count++;
+			}
+		});
+		return (count == 4);
+	}
+
 	if ($("#app-task-input")) {
 		var step = $("#app-task-input").attr("task-step");
-		if (localGet(step)) {
-			$("#app-task-input").val(localGet(step));
+		var stepData = localGet(step);
+		if (stepData) {
+			$("#app-task-input").val(stepData);
+			if (step == "when") {
+				$("#app-task-time").text(stepData + " minutes from now");
+			}
 		}
 		taskBreadcrumbs();
+		
+		if (step == "what") {
+			$("#app-task-input").change(function() {
+
+			});
+		}
+
+		else if (step == "when") {
+			$("#app-task-input").on("input change", function() {
+				$("#app-task-time").text($("#app-task-input").val() + " minutes from now");
+			});
+		}
+		setTimeout(function() {
+			$(".app-content-loading").css("display", "none");
+			$(".app-content-hidden").css("display", "inline");
+		}, 300);
 	}
 
 	$(".app-task-back>button").click(function(e) {
 		var step = $(this).attr("task-step");
 		if (step == "what") {
 			window.localStorage.removeItem("TossApp-TaskState");
-			window.location.href = "/main.html";
+			window.location.href = "./main.html";
 		}
 		else if (step == "who") {
-			window.location.href = "/whatTask.html";
+			window.location.href = "./whatTask.html";
 		}
 		else if (step == "when") {
-			window.location.href = "/whoTask.html";
+			window.location.href = "./whoTask.html";
 		}
 		else if (step == "where") {
-			window.location.href = "/whenTask.html";
+			window.location.href = "./whenTask.html";
 		}
 		e.preventDefault();
 	});
@@ -64,19 +100,19 @@ $(document).ready(function() {
 		var step = $(this).attr("task-step");
 		if (step == "what") {
 			localSet(step, $("#app-task-input").val());
-			window.location.href = "/whoTask.html";
+			window.location.href = "./whoTask.html";
 		}
 		else if (step == "who") {
 			localSet(step, $("#app-task-input").val());
-			window.location.href = "/whenTask.html";
+			window.location.href = "./whenTask.html";
 		}
 		else if (step == "when") {
 			localSet(step, $("#app-task-input").val());
-			window.location.href = "/whereTask.html";
+			window.location.href = "./whereTask.html";
 		}
 		else if (step == "where") {
 			localSet(step, $("#app-task-input").val());
-			window.location.href = "/confirmTask.html";
+			window.location.href = "./confirmTask.html";
 		}
 		e.preventDefault();
 	});
@@ -91,14 +127,47 @@ $(document).ready(function() {
 				password: $("#tossSignUpPassword").val()
 			};
 
-			$.post(url + "/v1/accounts/", data, function(data) {
+			$.post(url + "/accounts/", data, function(data) {
 				console.log(data);
 			}).done(function(resp) {
-				window.location.href = "/main.html";
+				window.location.href = "./index.html";
 			});
 		}
 		e.preventDefault();
 	});
+
+	if ($("#tossConfirmTaskButton").length) {
+		console.log(localGet("token"));
+		if (!taskValidate()) {
+			$("#tossConfirmTaskButton").prop("disabled", "true");
+		}
+		$("#tossConfirmTaskButton").click(function(e) {
+			var data = {
+				author: localGet("who"),
+				title: localGet("what"),
+				date: localGet("when"),
+				location: localGet("where")
+			};
+			
+			console.log(localGet("when"));
+			var token = localGet("token");
+
+			$.ajax({
+				url: url + "/activities/",
+				type: "POST",
+				headers: {
+					"Authorization": "Token " + token,
+				},
+				data: data,
+				dataType: "json"
+			}).done(function(resp, status, err) {
+				console.log(status);
+				console.log(resp, status, err);
+			});
+
+			e.preventDefault();
+		});
+	}
 
 	$("#tossLoginButton").click(function(e) {
 		var data = {
@@ -106,6 +175,18 @@ $(document).ready(function() {
 			password: $("#tossLoginPassword").val()
 		};
 
+		$.post(url + "/accounts/login/", data, function(data) {
+			//console.log(data);
+		}).done(function(resp) {
+			if (resp["token"]) {
+				localSet("token", resp["token"]);
+				localSet("username", data["username"]);
+				window.location.href = "./main.html";
+			}
+			else {
+				console.log("Invalid login.");
+			}
+		});
 		//
 		e.preventDefault();
 	});
